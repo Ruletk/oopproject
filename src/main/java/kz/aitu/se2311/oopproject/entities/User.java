@@ -1,0 +1,87 @@
+package kz.aitu.se2311.oopproject.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+@Entity
+@Table(name = "users")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
+    // Columns
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) // PostgreSQL
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false, length = 64)
+    private String password;
+
+    private Boolean enabled;
+
+    // Relationships
+    @ManyToMany(mappedBy = "users")
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Collection<Role> roles;
+
+    @OneToMany(mappedBy = "owner")
+    @JsonIgnore
+    private Collection<Cart> carts;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Collection<Order> orders;
+
+    @ManyToMany
+    @JsonIgnore
+    private Collection<Company> companies;
+
+
+    //Methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return getEnabled();
+    }
+}
