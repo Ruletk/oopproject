@@ -1,13 +1,11 @@
-package kz.aitu.se2311.oopproject.controllers;
+package kz.aitu.se2311.oopproject.auth;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kz.aitu.se2311.oopproject.requests.SignUpRequest;
 import kz.aitu.se2311.oopproject.requests.SignInRequest;
-import kz.aitu.se2311.oopproject.responses.JwtAuthenticationResponse;
-import kz.aitu.se2311.oopproject.services.AuthService;
-import kz.aitu.se2311.oopproject.services.UserService;
+import kz.aitu.se2311.oopproject.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.responses.jwttokens.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

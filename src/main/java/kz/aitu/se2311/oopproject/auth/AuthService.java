@@ -1,15 +1,14 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.auth;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
-import kz.aitu.se2311.oopproject.auth.JwtService;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
 import kz.aitu.se2311.oopproject.requests.SignInRequest;
 import kz.aitu.se2311.oopproject.requests.SignUpRequest;
-import kz.aitu.se2311.oopproject.responses.JwtAuthenticationResponse;
+import kz.aitu.se2311.oopproject.responses.jwttokens.JwtAuthenticationResponse;
+import kz.aitu.se2311.oopproject.services.RoleService;
+import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.Authenticator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

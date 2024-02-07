@@ -1,18 +1,17 @@
 package kz.aitu.se2311.oopproject.controllers;
 
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.exceptions.UserAlreadyExists;
-import kz.aitu.se2311.oopproject.requests.UserRequest;
 import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/users")

@@ -1,7 +1,6 @@
 package kz.aitu.se2311.oopproject.config;
 
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
-import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

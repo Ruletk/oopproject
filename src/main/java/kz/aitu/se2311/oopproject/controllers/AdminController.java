@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -17,6 +16,7 @@ import java.util.List;
 @Tag(name = "Admin panel")
 public class AdminController {
     private final UserService userService;
+
     @GetMapping("/all-users")
     public Collection<User> getAllUsers() {
         return userService.getAllUsers();

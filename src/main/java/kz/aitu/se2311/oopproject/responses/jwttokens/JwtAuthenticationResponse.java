@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.responses;
+package kz.aitu.se2311.oopproject.responses.jwttokens;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

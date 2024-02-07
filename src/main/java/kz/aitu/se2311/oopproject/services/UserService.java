@@ -1,25 +1,19 @@
 package kz.aitu.se2311.oopproject.services;
 
-import kz.aitu.se2311.oopproject.auth.JwtService;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
+import kz.aitu.se2311.oopproject.exceptions.UserAlreadyExists;
 import kz.aitu.se2311.oopproject.repositories.RoleRepository;
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
-import kz.aitu.se2311.oopproject.requests.SignUpRequest;
-import kz.aitu.se2311.oopproject.requests.SignInRequest;
-import kz.aitu.se2311.oopproject.responses.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,11 +28,14 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        Map<String, String> map = new HashMap<>();
         if (existUserByUsername(user.getUsername()))
-            throw new RuntimeException("User with this username already exists");
+            map.put("username", "User with this username already exists");
         if (existUserByEmail(user.getEmail()))
-            throw new RuntimeException("User with this email already exists");
-        return save(user);
+            map.put("email", "User with this email already exists");
+        if (map.isEmpty())
+            return save(user);
+        throw new UserAlreadyExists("", map.get("username"), map.get("email"));
     }
 
     public User getUserByUsername(String username) {
