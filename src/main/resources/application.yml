@@ -1,11 +1,15 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/oopproject"
-    username: "oopproject"
-    password: "oopproject"
+    url: jdbc:postgresql://localhost:5432/oopproject
+    username: oopproject
+    password: oopproject
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
+  security:
+    secret_token: EeOputaCmVfzzO2YQxuusnRBUQ9vJrDvQ5oJsU59QRXQ4O5DT8I/AxxkmyLjfKAH
+  main:
+    allow-circular-references: true

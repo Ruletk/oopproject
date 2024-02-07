@@ -1,12 +1,14 @@
 package kz.aitu.se2311.oopproject.controllers;
 
-import kz.aitu.se2311.oopproject.requests.RegistrationRequest;
-import kz.aitu.se2311.oopproject.responses.AuthenticationResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import kz.aitu.se2311.oopproject.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.requests.SignInRequest;
+import kz.aitu.se2311.oopproject.responses.JwtAuthenticationResponse;
+import kz.aitu.se2311.oopproject.services.AuthService;
 import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
-    private final UserService userService;
+    private final AuthService authService;
 
-    @PostMapping("register")
-    public ResponseEntity<?> register(final @RequestBody RegistrationRequest request) {
-        AuthenticationResponse response = userService.register(request);
-        if (response.getMessage().equals("ok")) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    @PostMapping("/sign-up")
+    @Operation(summary = "User registration")
+    public JwtAuthenticationResponse signUp(final @RequestBody @Valid SignUpRequest request) {
+        return authService.signUp(request);
+    }
+
+    @PostMapping("/sign-in")
+    @Operation(summary = "User authentication")
+    public JwtAuthenticationResponse signIn(final @RequestBody @Valid SignInRequest request) {
+        return authService.signIn(request);
     }
 }

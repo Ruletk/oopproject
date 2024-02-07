@@ -1,107 +1,77 @@
 package kz.aitu.se2311.oopproject.services;
 
+import kz.aitu.se2311.oopproject.auth.JwtService;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
 import kz.aitu.se2311.oopproject.repositories.RoleRepository;
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
-import kz.aitu.se2311.oopproject.requests.AuthenticationRequest;
-import kz.aitu.se2311.oopproject.requests.RegistrationRequest;
-import kz.aitu.se2311.oopproject.responses.AuthenticationResponse;
+import kz.aitu.se2311.oopproject.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.requests.SignInRequest;
+import kz.aitu.se2311.oopproject.responses.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationResponse register(RegistrationRequest request) throws DataIntegrityViolationException {
-        User user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .build();
-
-        Role userRole = roleRepository.getRoleByName("User").orElse(new Role());
-
-        user.setRoles(Collections.singletonList(userRole));
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        
-        try {
-            User registeredUser = createUser(user);
-        } catch (DataIntegrityViolationException e) {
-            return AuthenticationResponse.builder().message(e.getMessage()).build();
-        }
-
-        String token = "Implement token creation here";
-
-        return AuthenticationResponse.builder().message("ok").token(token).build();
-    }
-
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws NoSuchElementException, AuthenticationException {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
-                request.getPassword()
-        ));
-        User user = getUserByUsername(request.getUsername()).orElseThrow();
-
-        String token = "Implement token in auth here";
-
-        return AuthenticationResponse.builder().message("ok").token(token).build();
-    }
-
-    public User createUser(String username, String email) {
-        User user = User.builder()
-                .username(username)
-                .email(email)
-                .build();
-        return createUser(user);
-    }
-
-
-    public User createUser(User user) throws DataIntegrityViolationException {
-        checkUserCredentials(user);
-
+    private User save(User user) {
+        log.debug(String.format("Saving user %s", user.getUsername()));
         return userRepository.save(user);
     }
 
-    /**
-     * Checking username and email on availability.
-     *
-     * @param user User class object. User must have username and email.
-     * @throws DataIntegrityViolationException Spring data JPA exception on unique constrain.
-     */
-    private void checkUserCredentials(User user) throws DataIntegrityViolationException {
-        if (user.getUsername() == null || user.getEmail() == null)
-            throw new IllegalArgumentException("Username and email must be provided!");
-
-        if (getUserByUsername(user.getUsername()).isPresent())
-            throw new DataIntegrityViolationException("User with username " + user.getUsername() + " already exists.");
-        if (getUserByEmail(user.getEmail()).isPresent())
-            throw new DataIntegrityViolationException("User with email " + user.getEmail() + "already exists.");
+    public User createUser(User user) {
+        if (existUserByUsername(user.getUsername()))
+            throw new RuntimeException("User with this username already exists");
+        if (existUserByEmail(user.getEmail()))
+            throw new RuntimeException("User with this email already exists");
+        return save(user);
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.getUserByUsername(username);
-    }
-
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
     }
 
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public boolean existUserByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existUserByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void addNewRole(User user, Role role) {
+        Collection<Role> roles = user.getRoles();
+        roles.add(role);
+        user.setRoles(roles);
+        save(user);
+    }
+
+    public User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return getUserByUsername(username);
+    }
+
+    @Deprecated
+    public void getAdminRole() {
+        addNewRole(getCurrentUser(), roleRepository.getRoleByName("Admin").orElseThrow());
     }
 }

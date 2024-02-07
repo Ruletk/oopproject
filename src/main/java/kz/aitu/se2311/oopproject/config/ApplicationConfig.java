@@ -1,6 +1,7 @@
 package kz.aitu.se2311.oopproject.config;
 
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
+import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +20,9 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.getUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
@@ -33,13 +35,13 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.getUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+            throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }

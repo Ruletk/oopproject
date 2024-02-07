@@ -32,18 +32,21 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false, length = 64)
+    @JsonIgnore
     private String password;
 
-    private Boolean enabled;
+    @Column
+    private Boolean enabled = true;
 
     // Relationships
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
+    @JsonIgnore
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "owner")
@@ -57,7 +60,6 @@ public class User implements UserDetails {
     @ManyToMany
     @JsonIgnore
     private Collection<Company> companies;
-
 
     //Methods
     @Override
