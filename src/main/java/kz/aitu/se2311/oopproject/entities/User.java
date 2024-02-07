@@ -2,10 +2,7 @@ package kz.aitu.se2311.oopproject.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,6 +58,11 @@ public class User implements UserDetails {
     @JsonIgnore
     private Collection<Company> companies;
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    @ToString.Exclude
+    private RefreshToken token;
+
     //Methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,4 +88,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return getEnabled();
     }
+
 }

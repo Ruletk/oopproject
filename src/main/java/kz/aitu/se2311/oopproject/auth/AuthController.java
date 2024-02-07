@@ -3,6 +3,7 @@ package kz.aitu.se2311.oopproject.auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kz.aitu.se2311.oopproject.requests.RefreshTokenRequest;
 import kz.aitu.se2311.oopproject.requests.SignInRequest;
 import kz.aitu.se2311.oopproject.requests.SignUpRequest;
 import kz.aitu.se2311.oopproject.responses.jwttokens.JwtAuthenticationResponse;
@@ -29,5 +30,11 @@ public class AuthController {
     @Operation(summary = "User authentication")
     public JwtAuthenticationResponse signIn(final @RequestBody @Valid SignInRequest request) {
         return authService.signIn(request);
+    }
+
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh access token using refresh token")
+    public JwtAuthenticationResponse refreshToken(final @RequestBody @Valid RefreshTokenRequest request) {
+        return authService.refreshAccessToken(request);
     }
 }

@@ -1,10 +1,13 @@
 package kz.aitu.se2311.oopproject.auth;
 
+import kz.aitu.se2311.oopproject.entities.RefreshToken;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
+import kz.aitu.se2311.oopproject.requests.RefreshTokenRequest;
 import kz.aitu.se2311.oopproject.requests.SignInRequest;
 import kz.aitu.se2311.oopproject.requests.SignUpRequest;
 import kz.aitu.se2311.oopproject.responses.jwttokens.JwtAuthenticationResponse;
+import kz.aitu.se2311.oopproject.services.RefreshTokenService;
 import kz.aitu.se2311.oopproject.services.RoleService;
 import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +26,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleRepository;
     private final UserService userService;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         log.debug(String.format("Registering user %s", request.getUsername()));
@@ -37,9 +40,10 @@ public class AuthService {
 
         user = userService.createUser(user);
 
-        String token = jwtService.generateToken(user, JwtService.refreshTokenExpirationTimeout);
+        RefreshToken refreshToken = refreshTokenService.createToken(user);
+        String accessToken = refreshTokenService.generateAccessToken(refreshToken, user);
 
-        return new JwtAuthenticationResponse(token);
+        return new JwtAuthenticationResponse(refreshToken.getToken(), accessToken);
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest request) {
@@ -49,8 +53,16 @@ public class AuthService {
         ));
         User user = userService.getUserByUsername(request.getUsername());
 
-        String token = jwtService.generateToken(user, JwtService.refreshTokenExpirationTimeout);
+        RefreshToken refreshToken = refreshTokenService.updateToken(user);
+        String accessToken = refreshTokenService.generateAccessToken(refreshToken, user);
 
-        return new JwtAuthenticationResponse(token);
+        return new JwtAuthenticationResponse(refreshToken.getToken(), accessToken);
+    }
+
+    public JwtAuthenticationResponse refreshAccessToken(RefreshTokenRequest request) {
+        RefreshToken refreshToken = refreshTokenService.getTokenByString(request.getRefreshToken());
+        String accessToken = refreshTokenService.generateAccessToken(refreshToken);
+
+        return new JwtAuthenticationResponse(refreshToken.getToken(), accessToken);
     }
 }
