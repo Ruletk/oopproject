@@ -16,8 +16,8 @@ public class RoleInitializer {
     @PostConstruct
     public void init() {
         if (repository.count() == 0) {
-            Role userRole = Role.builder().name("User").build();
-            Role adminRole = Role.builder().name("Admin").build();
+            Role userRole = Role.builder().name("ROLE_USER").build();
+            Role adminRole = Role.builder().name("ROLE_ADMIN").build();
             repository.saveAll(Arrays.asList(userRole, adminRole));
         }
     }

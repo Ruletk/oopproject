@@ -25,7 +25,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
@@ -39,9 +39,10 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers("/api/v1/auth/**", "/api/v1/users/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("/api/v1/admin/**").hasAnyRole("Admin")
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN")
+                                .anyRequest().hasRole("USER")
                 )
+
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
@@ -49,4 +50,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

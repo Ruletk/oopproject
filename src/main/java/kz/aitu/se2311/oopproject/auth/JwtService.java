@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import kz.aitu.se2311.oopproject.entities.User;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,13 +44,7 @@ public class JwtService {
     }
 
     public String generateToken(JwtType type, UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof User customUserDetails) {
-            claims.put("id", customUserDetails.getId());
-            claims.put("email", customUserDetails.getEmail());
-            claims.put("roles", customUserDetails.getAuthorities());
-        }
-        return generateToken(type, claims, userDetails);
+        return generateToken(type, new HashMap<>(), userDetails);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails, JwtType type) {

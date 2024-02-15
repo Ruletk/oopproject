@@ -17,7 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
-    // Columns
+    // Columns -------------------------------------------------------
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE) // PostgreSQL
     private Long id;
@@ -32,10 +32,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    @Column
-    private Boolean enabled = true;
+    @Column(name = "is_enabled")
+    private Boolean enabled;
 
-    // Relationships
+    // Relationships ---------------------------------------------------
     @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(
@@ -44,18 +44,22 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "owner")
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Cart> carts;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Order> orders;
 
     @ManyToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Company> companies;
 
     @OneToOne(mappedBy = "user")
@@ -63,7 +67,7 @@ public class User implements UserDetails {
     @ToString.Exclude
     private RefreshToken token;
 
-    //Methods
+    //Methods --------------------------------------------------------
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -89,4 +93,8 @@ public class User implements UserDetails {
         return getEnabled();
     }
 
+    @PrePersist
+    void init() {
+        if (getEnabled() == null) setEnabled(true);
+    }
 }

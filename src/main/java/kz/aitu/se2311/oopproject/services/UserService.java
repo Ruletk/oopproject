@@ -1,5 +1,6 @@
 package kz.aitu.se2311.oopproject.services;
 
+import jakarta.transaction.Transactional;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
 import kz.aitu.se2311.oopproject.exceptions.UserAlreadyExists;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
@@ -69,6 +71,6 @@ public class UserService {
 
     @Deprecated
     public void getAdminRole() {
-        addNewRole(getCurrentUser(), roleRepository.getRoleByName("Admin").orElseThrow());
+        addNewRole(getCurrentUser(), roleRepository.getRoleByName("ROLE_ADMIN").orElseThrow());
     }
 }

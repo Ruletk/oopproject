@@ -3,10 +3,12 @@ package kz.aitu.se2311.oopproject.requests;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @Schema(description = "Authentication request")
+@AllArgsConstructor
 public class SignInRequest {
     @Schema(description = "Username", example = "johnsmith")
     @Size(min = 3, max = 64, message = "Username must be between 3 and 64 characters long")

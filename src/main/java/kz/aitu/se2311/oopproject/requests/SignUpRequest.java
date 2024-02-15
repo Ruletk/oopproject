@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @Schema(description = "Registration request")
+@AllArgsConstructor
 public class SignUpRequest {
     @Schema(description = "Username", example = "johnsmith")
     @Size(min = 3, max = 64, message = "Username must be between 3 and 64 characters long")
