@@ -18,13 +18,14 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
     private Collection<User> users;
+
 
     @Override
     public String getAuthority() {

@@ -2,10 +2,7 @@ package kz.aitu.se2311.oopproject.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
-    // Columns
+    // Columns -------------------------------------------------------
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE) // PostgreSQL
     private Long id;
@@ -32,34 +29,45 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false, length = 64)
+    @JsonIgnore
     private String password;
 
+    @Column(name = "is_enabled")
     private Boolean enabled;
 
-    // Relationships
-    @ManyToMany(mappedBy = "users")
+    // Relationships ---------------------------------------------------
+    @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
+    @JsonIgnore
+    @ToString.Exclude
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "owner")
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Cart> carts;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Order> orders;
 
     @ManyToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Company> companies;
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    @ToString.Exclude
+    private RefreshToken token;
 
-    //Methods
+    //Methods --------------------------------------------------------
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -83,5 +91,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return getEnabled();
+    }
+
+    @PrePersist
+    void init() {
+        if (getEnabled() == null) setEnabled(true);
     }
 }
