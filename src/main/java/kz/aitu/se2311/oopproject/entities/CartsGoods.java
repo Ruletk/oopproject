@@ -1,6 +1,5 @@
 package kz.aitu.se2311.oopproject.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
