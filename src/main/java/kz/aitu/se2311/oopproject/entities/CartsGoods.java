@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Date;
 
@@ -21,11 +23,13 @@ public class CartsGoods {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "cart_id", nullable = false)
+    @Fetch(FetchMode.JOIN)
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "good_id", nullable = false)
+    @Fetch(FetchMode.JOIN)
     private Good good;
 
     @Column(name = "is_active")
@@ -35,6 +39,15 @@ public class CartsGoods {
     private Integer quantity;
 
     @Column(name = "added_at")
-    private Date added_at = new Date();
+    private Date added_at;
+
+    @Column(name = "deleted")
+    private Boolean isDeleted;
+
+    @PrePersist
+    private void init() {
+        if (added_at == null) added_at = new Date();
+        if (isDeleted == null) isDeleted = false;
+    }
 
 }
