@@ -13,14 +13,16 @@ import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-@Service
+@Service("authService")
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
@@ -51,10 +53,16 @@ public class AuthService {
     }
 
     public JwtResponse signIn(SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
-                request.getPassword()
-        ));
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getUsername(),
+                    request.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            log.info(e.getMessage());
+            throw e;
+        }
         User user = userService.getUserByUsername(request.getUsername());
 
         RefreshToken refreshToken = refreshTokenService.updateToken(user);

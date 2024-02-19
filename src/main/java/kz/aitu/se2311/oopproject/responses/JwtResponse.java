@@ -20,7 +20,7 @@ public class JwtResponse {
     @Schema(description = "Access token")
     private String accessToken;
 
-    @Schema(description = "Any errors")
+    @Schema(description = "Any errors or notifications")
     private String message;
 
     public JwtResponse(String refreshToken, String accessToken) {

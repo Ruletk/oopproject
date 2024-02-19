@@ -3,10 +3,8 @@ package kz.aitu.se2311.oopproject.auth;
 import jakarta.transaction.Transactional;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.repositories.RoleRepository;
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final MessageSource messages;
-    private final RoleRepository roleRepository;
 
 
     @Override
