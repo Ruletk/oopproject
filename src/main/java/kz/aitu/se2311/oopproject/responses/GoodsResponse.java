@@ -1,16 +1,26 @@
 package kz.aitu.se2311.oopproject.responses;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import kz.aitu.se2311.oopproject.entities.Good;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class GoodsCreateResponse {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class GoodsResponse {
     private Long id;
     private String name;
     private Integer price;
     private String description;
 
-    public GoodsCreateResponse(Good good) {
+    private String message;
+
+    public GoodsResponse(Good good) {
         setId(good.getId());
         setName(good.getName());
         setPrice(good.getPrice());

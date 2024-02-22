@@ -1,11 +1,7 @@
 package kz.aitu.se2311.oopproject.controllers;
 
-import kz.aitu.se2311.oopproject.requests.GoodsChangeRequest;
-import kz.aitu.se2311.oopproject.requests.GoodsCreationRequest;
-import kz.aitu.se2311.oopproject.requests.GoodsDeleteRequest;
-import kz.aitu.se2311.oopproject.responses.GoodsChangeResponse;
-import kz.aitu.se2311.oopproject.responses.GoodsCreateResponse;
-import kz.aitu.se2311.oopproject.responses.GoodsDeleteResponse;
+import kz.aitu.se2311.oopproject.requests.GoodsRequest;
+import kz.aitu.se2311.oopproject.responses.GoodsResponse;
 import kz.aitu.se2311.oopproject.services.GoodsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,19 +16,20 @@ public class GoodsController {
     private final GoodsService goodsService;
 
     @PostMapping("/create")
-    public GoodsCreateResponse create(final @RequestBody GoodsCreationRequest request) {
-        return new GoodsCreateResponse(goodsService.createGood(request));
+    public GoodsResponse create(final @RequestBody GoodsRequest request) {
+        return new GoodsResponse(goodsService.createGood(request));
     }
 
     @PostMapping("/edit")
-    public GoodsChangeResponse change(final @RequestBody GoodsChangeRequest request) {
-        return new GoodsChangeResponse(goodsService.changeGood(request));
+    public GoodsResponse change(final @RequestBody GoodsRequest request) {
+        return new GoodsResponse(goodsService.changeGood(request));
     }
 
     @PostMapping("/delete")
-    public GoodsDeleteResponse delete(@RequestBody GoodsDeleteRequest request) {
+    public GoodsResponse delete(@RequestBody GoodsRequest request) {
         goodsService.deleteGood(request.getName());
-        GoodsDeleteResponse goodsDeleteResponse = new GoodsDeleteResponse(request);
+        GoodsResponse goodsDeleteResponse;
+        goodsDeleteResponse = GoodsResponse.builder().message("Good was deleted").build();
         return goodsDeleteResponse;
     }
 }

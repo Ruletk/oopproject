@@ -2,20 +2,21 @@ package kz.aitu.se2311.oopproject.services;
 
 import kz.aitu.se2311.oopproject.entities.Good;
 import kz.aitu.se2311.oopproject.repositories.GoodRepository;
-import kz.aitu.se2311.oopproject.requests.GoodsChangeRequest;
-import kz.aitu.se2311.oopproject.requests.GoodsCreationRequest;
+import kz.aitu.se2311.oopproject.requests.GoodsRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GoodsService {
     private final GoodRepository goodRepository;
 
     public Good createGood(String name, String description, int price) {
-        Good good = Good.builder()
+        GoodsRequest good = GoodsRequest.builder()
                 .name(name)
                 .description(description)
                 .price(price)
@@ -23,44 +24,52 @@ public class GoodsService {
         return createGood(good);
     }
 
-    public Good createGood(Good good) {
-        return save(good);
-    }
-
     private Good save(Good good) {
         return goodRepository.save(good);
     }
 
-    public Collection<Good> getGoodByName(String name) {
+    public Optional<Good> getGoodByName(String name) {
         return goodRepository.findByName(name);
     }
 
-    public Good createGood(GoodsCreationRequest request) {
+    public Optional<Good> getGoodBySlug(String slug) {
+        return goodRepository.findBySlug(slug);
+    }
+
+    public Good createGood(GoodsRequest request) {
 
         return createGood(request.getName(), request.getDescription(), request.getPrice());
     }
 
-    public Good changeGood(GoodsChangeRequest request) {
-        Good good = (Good) goodRepository.findByName(request.getName());
+    public Good changeGood(GoodsRequest request) {
+        Optional<Good> optionalGood = goodRepository.findByName(request.getName());
 
-        if (good != null) {
-            good.setDescription(request.getDescription());
-            good.setPrice(request.getPrice());
-
-            return save(good);
-        } else {
+        if (optionalGood.isEmpty()) {
             return null;
         }
+        Good good = optionalGood.get();
+        good.setDescription(request.getDescription());
+        good.setPrice(request.getPrice());
+
+        return save(good);
     }
 
     public void deleteGood(String name) {
-        Good good = (Good) goodRepository.findByName(name);
+        Optional<Good> good = goodRepository.findByName(name);
 
-        if (good != null) {
-            goodRepository.delete(good);
-        } else {
-            System.out.println("The feature is not found");
-        }
+        good.ifPresent(goodRepository::delete);
 
     }
+    public String createSlug(String input) {
+        String toSlug = input.replaceAll("[^a-zA-Z0-9\\s-]", "")
+                .replaceAll("\\s+", " ")
+                .toLowerCase()
+                .trim()
+                .replaceAll("\\s", "-");
+
+
+        return toSlug;
+    }
+
+
 }

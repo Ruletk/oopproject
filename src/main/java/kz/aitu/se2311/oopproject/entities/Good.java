@@ -23,6 +23,9 @@ public class Good {
     @Column(length = 128)
     private String name;
 
+    @Column(length=128, unique = true)
+    private String slug;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
