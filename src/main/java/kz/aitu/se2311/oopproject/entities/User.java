@@ -57,8 +57,7 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Collection<Order> orders;
 
-    @ManyToMany
-    @JsonIgnore
+    @OneToMany(mappedBy = "owner")
     @ToString.Exclude
     private Collection<Company> companies;
 

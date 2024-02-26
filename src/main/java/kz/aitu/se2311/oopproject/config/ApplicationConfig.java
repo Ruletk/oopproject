@@ -1,5 +1,6 @@
 package kz.aitu.se2311.oopproject.config;
 
+import com.github.slugify.Slugify;
 import kz.aitu.se2311.oopproject.auth.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,5 +33,10 @@ public class ApplicationConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public Slugify slugify() {
+        return Slugify.builder().build();
     }
 }

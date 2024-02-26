@@ -7,7 +7,7 @@ spring:
     password: oopproject
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
   security:
     secret_token: EeOputaCmVfzzO2YQxuusnRBUQ9vJrDvQ5oJsU59QRXQ4O5DT8I/AxxkmyLjfKAH
