@@ -1,5 +1,9 @@
 package kz.aitu.se2311.oopproject.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kz.aitu.se2311.oopproject.requests.GoodsRequest;
 import kz.aitu.se2311.oopproject.responses.GoodsResponse;
 import kz.aitu.se2311.oopproject.services.GoodsService;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GoodsController {
     private final GoodsService goodsService;
+    @Operation(
+            description = "Get good by its name"
+    )
 
     @PostMapping("/create")
     public GoodsResponse create(final @RequestBody GoodsRequest request) {

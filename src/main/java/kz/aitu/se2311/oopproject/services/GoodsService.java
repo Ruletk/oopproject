@@ -24,8 +24,9 @@ public class GoodsService {
         return createGood(good);
     }
 
-    private Good save(Good good) {
-        return goodRepository.save(good);
+    public Good createGood(GoodsRequest request) {
+
+        return createGood(request.getName(), request.getDescription(), request.getPrice());
     }
 
     public Optional<Good> getGoodByName(String name) {
@@ -34,11 +35,6 @@ public class GoodsService {
 
     public Optional<Good> getGoodBySlug(String slug) {
         return goodRepository.findBySlug(slug);
-    }
-
-    public Good createGood(GoodsRequest request) {
-
-        return createGood(request.getName(), request.getDescription(), request.getPrice());
     }
 
     public Good changeGood(GoodsRequest request) {
@@ -60,6 +56,7 @@ public class GoodsService {
         good.ifPresent(goodRepository::delete);
 
     }
+
     public String createSlug(String input) {
         String toSlug = input.replaceAll("[^a-zA-Z0-9\\s-]", "")
                 .replaceAll("\\s+", " ")
@@ -69,6 +66,9 @@ public class GoodsService {
 
 
         return toSlug;
+    }
+    private Good save(Good good) {
+        return goodRepository.save(good);
     }
 
 
