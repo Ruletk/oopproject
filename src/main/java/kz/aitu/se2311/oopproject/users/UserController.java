@@ -1,7 +1,7 @@
-package kz.aitu.se2311.oopproject.controllers;
+package kz.aitu.se2311.oopproject.users;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import java.util.Collections;
 @RestController
 @RequestMapping("api/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "User controller")
 public class UserController {
     private final UserService userService;
 

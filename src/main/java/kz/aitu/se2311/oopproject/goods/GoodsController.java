@@ -1,12 +1,8 @@
-package kz.aitu.se2311.oopproject.controllers;
+package kz.aitu.se2311.oopproject.goods;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import kz.aitu.se2311.oopproject.requests.GoodsRequest;
-import kz.aitu.se2311.oopproject.responses.GoodsResponse;
-import kz.aitu.se2311.oopproject.services.GoodsService;
+import kz.aitu.se2311.oopproject.goods.dto.requests.GoodsRequest;
+import kz.aitu.se2311.oopproject.goods.dto.responses.GoodsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

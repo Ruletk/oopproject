@@ -1,7 +1,6 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import io.jsonwebtoken.JwtException;
-import kz.aitu.se2311.oopproject.auth.JwtService;
 import kz.aitu.se2311.oopproject.entities.RefreshToken;
 import kz.aitu.se2311.oopproject.entities.User;
 import kz.aitu.se2311.oopproject.repositories.RefreshTokenRepository;
@@ -32,17 +31,23 @@ public class RefreshTokenService {
     }
 
     public RefreshToken updateToken(User user) {
-        RefreshToken refreshToken = repository.getRefreshTokenByUserId(user.getId());
-        if (refreshToken == null)
+        RefreshToken refreshToken = user.getToken();
+        if (refreshToken == null) {
+            log.debug("Creating new refresh JWT token");
             return createToken(user);
+        }
 
-        if (refreshToken.getExpirationDate().isBefore(Instant.now()))
-            return refreshToken;
+        if (refreshToken.getExpirationDate().isBefore(Instant.now())) {
+            log.debug("Token is expired, creating new refresh JWT token");
+            refreshToken.setToken(generateToken(user, JwtService.JwtType.REFRESH_TOKEN));
+            refreshToken.setExpirationDate(Instant.ofEpochSecond(System.currentTimeMillis() +
+                    JwtService.JwtType.REFRESH_TOKEN.getExpirationTimeout()));
+            return save(refreshToken);
+        }
 
-        refreshToken.setToken(generateToken(user, JwtService.JwtType.REFRESH_TOKEN));
-        refreshToken.setExpirationDate(Instant.ofEpochSecond(System.currentTimeMillis() +
-                JwtService.JwtType.REFRESH_TOKEN.getExpirationTimeout()));
-        return save(refreshToken);
+        log.debug("Returning existing jwt token");
+        return refreshToken;
+
     }
 
     public String generateAccessToken(RefreshToken token) {
@@ -65,6 +70,7 @@ public class RefreshTokenService {
     }
 
     private String generateToken(User user, JwtService.JwtType type) {
+        log.info("Generating new JWT token with type '" + type.name() + "' for user '" + user.getUsername() + "'");
         return jwtService.generateToken(type, user);
     }
 

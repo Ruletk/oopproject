@@ -1,8 +1,10 @@
 package kz.aitu.se2311.oopproject.auth;
 
+import kz.aitu.se2311.oopproject.auth.dto.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.auth.dto.responses.JwtResponse;
+import kz.aitu.se2311.oopproject.auth.services.AuthService;
+import kz.aitu.se2311.oopproject.auth.services.JwtService;
 import kz.aitu.se2311.oopproject.config.JwtAuthenticationFilter;
-import kz.aitu.se2311.oopproject.requests.SignUpRequest;
-import kz.aitu.se2311.oopproject.responses.JwtResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

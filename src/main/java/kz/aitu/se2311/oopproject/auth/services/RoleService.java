@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.repositories.RoleRepository;

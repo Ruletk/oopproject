@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.requests;
+package kz.aitu.se2311.oopproject.goods.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

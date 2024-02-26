@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.responses;
+package kz.aitu.se2311.oopproject.goods.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kz.aitu.se2311.oopproject.entities.Good;

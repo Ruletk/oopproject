@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.responses;
+package kz.aitu.se2311.oopproject.auth.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +20,7 @@ public class JwtResponse {
     @Schema(description = "Access token")
     private String accessToken;
 
-    @Schema(description = "Any errors")
+    @Schema(description = "Any errors or notifications")
     private String message;
 
     public JwtResponse(String refreshToken, String accessToken) {

@@ -1,26 +1,26 @@
-package kz.aitu.se2311.oopproject.auth;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import jakarta.transaction.Transactional;
+import kz.aitu.se2311.oopproject.auth.dto.requests.RefreshTokenRequest;
+import kz.aitu.se2311.oopproject.auth.dto.requests.SignInRequest;
+import kz.aitu.se2311.oopproject.auth.dto.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.auth.dto.responses.JwtResponse;
 import kz.aitu.se2311.oopproject.entities.RefreshToken;
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.requests.RefreshTokenRequest;
-import kz.aitu.se2311.oopproject.requests.SignInRequest;
-import kz.aitu.se2311.oopproject.requests.SignUpRequest;
-import kz.aitu.se2311.oopproject.responses.JwtResponse;
-import kz.aitu.se2311.oopproject.services.RefreshTokenService;
-import kz.aitu.se2311.oopproject.services.RoleService;
-import kz.aitu.se2311.oopproject.services.UserService;
+import kz.aitu.se2311.oopproject.users.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-@Service
+@Service("authService")
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
@@ -51,10 +51,16 @@ public class AuthService {
     }
 
     public JwtResponse signIn(SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
-                request.getPassword()
-        ));
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getUsername(),
+                    request.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            log.info(e.getMessage());
+            throw e;
+        }
         User user = userService.getUserByUsername(request.getUsername());
 
         RefreshToken refreshToken = refreshTokenService.updateToken(user);

@@ -1,8 +1,8 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.goods;
 
 import kz.aitu.se2311.oopproject.entities.Good;
 import kz.aitu.se2311.oopproject.repositories.GoodRepository;
-import kz.aitu.se2311.oopproject.requests.GoodsRequest;
+import kz.aitu.se2311.oopproject.goods.dto.requests.GoodsRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

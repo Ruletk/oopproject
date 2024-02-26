@@ -1,11 +1,11 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.users;
 
 import jakarta.transaction.Transactional;
 import kz.aitu.se2311.oopproject.entities.Role;
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.exceptions.UserAlreadyExists;
 import kz.aitu.se2311.oopproject.repositories.RoleRepository;
 import kz.aitu.se2311.oopproject.repositories.UserRepository;
+import kz.aitu.se2311.oopproject.users.exceptions.UserAlreadyExists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
