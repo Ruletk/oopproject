@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.auth;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import jakarta.transaction.Transactional;
 import kz.aitu.se2311.oopproject.entities.Role;

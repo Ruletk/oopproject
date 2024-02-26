@@ -1,6 +1,6 @@
 package kz.aitu.se2311.oopproject.config;
 
-import kz.aitu.se2311.oopproject.auth.CustomUserDetailsService;
+import kz.aitu.se2311.oopproject.auth.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

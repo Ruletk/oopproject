@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.responses;
+package kz.aitu.se2311.oopproject.auth.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

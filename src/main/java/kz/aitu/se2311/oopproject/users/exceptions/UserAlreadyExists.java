@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.exceptions;
+package kz.aitu.se2311.oopproject.users.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

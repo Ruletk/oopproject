@@ -1,7 +1,6 @@
-package kz.aitu.se2311.oopproject.services;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import io.jsonwebtoken.JwtException;
-import kz.aitu.se2311.oopproject.auth.JwtService;
 import kz.aitu.se2311.oopproject.entities.RefreshToken;
 import kz.aitu.se2311.oopproject.entities.User;
 import kz.aitu.se2311.oopproject.repositories.RefreshTokenRepository;
