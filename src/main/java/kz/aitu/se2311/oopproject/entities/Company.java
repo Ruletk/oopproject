@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -23,25 +24,22 @@ public class Company {
     @Column(name = "name", length = 128)
     private String name;
 
+    @Column(name = "slug", length = 128)
+    private String slug;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "created_at")
-    private Date created_at = new Date();
+    private Date createdAt = new Date();
 
     @Column(name = "updated_at")
-    private Date updated_at = new Date();
+    private Date updatedAt = new Date();
 
     @Column(name = "deleted_at")
     private Date deleted_at;
 
-    @ManyToMany
-    @JoinTable(
-            name = "companies_users",
-            joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-    )
-    private Collection<User> personnel;
-
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    private User owner;
 }
