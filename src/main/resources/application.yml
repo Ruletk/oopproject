@@ -11,3 +11,5 @@ spring:
     open-in-view: false
   security:
     secret_token: EeOputaCmVfzzO2YQxuusnRBUQ9vJrDvQ5oJsU59QRXQ4O5DT8I/AxxkmyLjfKAH
+springdoc:
+  default-produces-media-type: application/json

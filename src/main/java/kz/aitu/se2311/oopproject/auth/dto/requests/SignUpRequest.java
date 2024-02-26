@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.requests;
+package kz.aitu.se2311.oopproject.auth.dto.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;

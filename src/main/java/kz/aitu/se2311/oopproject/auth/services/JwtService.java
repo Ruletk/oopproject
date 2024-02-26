@@ -1,4 +1,4 @@
-package kz.aitu.se2311.oopproject.auth;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;

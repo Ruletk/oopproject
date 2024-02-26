@@ -1,15 +1,13 @@
-package kz.aitu.se2311.oopproject.auth;
+package kz.aitu.se2311.oopproject.auth.services;
 
 import jakarta.transaction.Transactional;
+import kz.aitu.se2311.oopproject.auth.dto.requests.RefreshTokenRequest;
+import kz.aitu.se2311.oopproject.auth.dto.requests.SignInRequest;
+import kz.aitu.se2311.oopproject.auth.dto.requests.SignUpRequest;
+import kz.aitu.se2311.oopproject.auth.dto.responses.JwtResponse;
 import kz.aitu.se2311.oopproject.entities.RefreshToken;
 import kz.aitu.se2311.oopproject.entities.User;
-import kz.aitu.se2311.oopproject.requests.RefreshTokenRequest;
-import kz.aitu.se2311.oopproject.requests.SignInRequest;
-import kz.aitu.se2311.oopproject.requests.SignUpRequest;
-import kz.aitu.se2311.oopproject.responses.JwtResponse;
-import kz.aitu.se2311.oopproject.services.RefreshTokenService;
-import kz.aitu.se2311.oopproject.services.RoleService;
-import kz.aitu.se2311.oopproject.services.UserService;
+import kz.aitu.se2311.oopproject.users.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
