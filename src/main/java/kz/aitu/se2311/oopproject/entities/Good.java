@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Collection;
 import java.util.Date;
@@ -23,6 +25,9 @@ public class Good {
     @Column(length = 128)
     private String name;
 
+    @Column(length=128, unique = true)
+    private String slug;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -36,6 +41,10 @@ public class Good {
 
     @OneToMany(fetch = FetchType.LAZY)
     private Collection<CartsGoods> carts;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    private Company company;
 
 
 }
