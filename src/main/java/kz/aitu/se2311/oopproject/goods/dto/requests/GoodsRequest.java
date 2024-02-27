@@ -14,4 +14,5 @@ public class GoodsRequest {
     private String name;
     private String description;
     private Integer price;
+    private Long companyId;
 }

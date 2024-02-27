@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Collection;
 import java.util.Date;
@@ -39,6 +41,10 @@ public class Good {
 
     @OneToMany(fetch = FetchType.LAZY)
     private Collection<CartsGoods> carts;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    private Company company;
 
 
 }

@@ -50,7 +50,12 @@ public class CompanyController {
     @PostMapping("/create")
     @PutMapping("/edit")
     @Operation(summary = "Create company by name and description", responses = {
-            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = CompanyResponse.class))})
+            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = CompanyResponse.class))}),
+            @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema(example = """
+                    {
+                        "message": "JSON validation error. Check the correctness of the JSON"
+                    }
+                    """))})
             // TODO: Make http response for 409
     })
     public ResponseEntity<CompanyResponse> createCompany(final @RequestBody @Valid CompanyCreationRequest request) {
@@ -60,6 +65,11 @@ public class CompanyController {
     @PutMapping("/edit")
     @Operation(summary = "Edit company fields by id", description = "Fields are optional.", responses = {
             @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = CompanyResponse.class))}),
+            @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema(example = """
+                    {
+                        "message": "JSON validation error. Check the correctness of the JSON"
+                    }
+                    """))}),
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema(example = """
                     {
                         "message": "Not found"

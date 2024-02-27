@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -42,4 +43,7 @@ public class Company {
     @ManyToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
     private User owner;
+
+    @OneToMany(mappedBy = "company")
+    private Collection<Good> goods;
 }

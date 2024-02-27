@@ -1,12 +1,24 @@
 package kz.aitu.se2311.oopproject.goods;
 
+import com.github.slugify.Slugify;
+import jakarta.persistence.EntityNotFoundException;
+import kz.aitu.se2311.oopproject.entities.Company;
 import kz.aitu.se2311.oopproject.entities.Good;
-import kz.aitu.se2311.oopproject.repositories.GoodRepository;
+import kz.aitu.se2311.oopproject.entities.User;
+import kz.aitu.se2311.oopproject.goods.dto.requests.GoodsCreationRequest;
+import kz.aitu.se2311.oopproject.goods.dto.requests.GoodsEditionRequest;
 import kz.aitu.se2311.oopproject.goods.dto.requests.GoodsRequest;
+import kz.aitu.se2311.oopproject.repositories.CompanyRepository;
+import kz.aitu.se2311.oopproject.repositories.GoodRepository;
+import kz.aitu.se2311.oopproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -14,19 +26,43 @@ import java.util.Optional;
 @Slf4j
 public class GoodsService {
     private final GoodRepository goodRepository;
+    private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private final Slugify slugify;
 
-    public Good createGood(String name, String description, int price) {
-        GoodsRequest good = GoodsRequest.builder()
-                .name(name)
-                .description(description)
-                .price(price)
+    public Good createGood(GoodsCreationRequest request) {
+        Company company = companyRepository.findById(request.getCompanyId()).orElseThrow(EntityNotFoundException::new);
+        if (!company.getOwner().getId().equals(getCurrentUser().getId()))
+            throw new AccessDeniedException("You don't have access to this page");
+
+        Good good = Good.builder()
+                .name(request.getName())
+                .slug(slugify.slugify(request.getName() + "-" +(new Date()).hashCode()))
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .created_at(new Date())
+                .updated_at(new Date())
+                .company(company)
                 .build();
+
         return createGood(good);
     }
 
-    public Good createGood(GoodsRequest request) {
+    public Good changeGood(GoodsEditionRequest request) {
+        Company company = companyRepository.findById(request.getCompanyId()).orElseThrow(EntityNotFoundException::new);
+        if (!company.getOwner().getId().equals(getCurrentUser().getId()))
+            throw new AccessDeniedException("You don't have access to this page");
 
-        return createGood(request.getName(), request.getDescription(), request.getPrice());
+        Good good = goodRepository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
+
+        BeanUtils.copyProperties(request, good);
+        good.setUpdated_at(new Date());
+
+        return save(good);
+    }
+
+    public Good searchGoodStartsWith(String s) {
+        return goodRepository.findByNameStartsWith(s).orElseThrow(EntityNotFoundException::new);
     }
 
     public Optional<Good> getGoodByName(String name) {
@@ -37,39 +73,28 @@ public class GoodsService {
         return goodRepository.findBySlug(slug);
     }
 
-    public Good changeGood(GoodsRequest request) {
-        Optional<Good> optionalGood = goodRepository.findByName(request.getName());
+    public void deleteGood(String name) {
+        Good good = goodRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
 
-        if (optionalGood.isEmpty()) {
-            return null;
-        }
-        Good good = optionalGood.get();
-        good.setDescription(request.getDescription());
-        good.setPrice(request.getPrice());
+        goodRepository.delete(good);
 
+    }
+
+    private Good createGood(Good good) {
         return save(good);
     }
 
-    public void deleteGood(String name) {
-        Optional<Good> good = goodRepository.findByName(name);
-
-        good.ifPresent(goodRepository::delete);
-
-    }
-
-    public String createSlug(String input) {
-        String toSlug = input.replaceAll("[^a-zA-Z0-9\\s-]", "")
-                .replaceAll("\\s+", " ")
-                .toLowerCase()
-                .trim()
-                .replaceAll("\\s", "-");
-
-
-        return toSlug;
-    }
     private Good save(Good good) {
         return goodRepository.save(good);
     }
 
-
+    private User getCurrentUser() {
+        return userRepository.getUserByUsername(
+                        SecurityContextHolder
+                                .getContext()
+                                .getAuthentication()
+                                .getName()
+                )
+                .orElseThrow(EntityNotFoundException::new);
+    }
 }
